@@ -1,8 +1,7 @@
 
 cmake_minimum_required(VERSION 3.13)
 
-
-SET(PROJECT_NAME "PardisoExample")
+SET(PROJECT_NAME "SparseLinearSolver")
 project(${PROJECT_NAME} LANGUAGES ${TEST_LANG})
 
 file(GLOB_RECURSE HEADER_FILES Include/*.h)
