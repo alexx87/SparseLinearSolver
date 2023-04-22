@@ -7,6 +7,7 @@ project(${PROJECT_NAME} LANGUAGES ${TEST_LANG})
 file(GLOB_RECURSE HEADER_FILES Include/*.h)
 file(GLOB_RECURSE SRC_FILES Source/*.cpp)
 
+include_directories("Include")
 include_directories($ENV{BOOST_PATH})
 include_directories(${MKL_INCLUDE})
 
