@@ -80,33 +80,25 @@ namespace Cholesky
 		if (_lMtx->Value[startRowIdx] < 0.0)
 			return Result::InvalidData;
 
-		_lMtx->Value[startRowIdx] = sqrt(_mtx->Value[startRowIdx]);
+		auto divide = sqrt(_mtx->Value[startRowIdx]);
+
+		_lMtx->Value[startRowIdx] = divide;
 		
+		if (divide < 1e-15)
+		{
+			return Result::InvalidData;
+		}
 		for (int i = 0; i < iColomn; i++)
 		{
-			int startRowIdx = _mtx->RowIndex[iColomn] ;
-			int endRowIdx = _mtx->RowIndex[iColomn + 1]-1 ;
+			int startRowIdx = _mtx->RowIndex[i] ;
+			int endRowIdx = _mtx->RowIndex[i + 1]-1 ;
 			for (int j = startRowIdx; j <= endRowIdx; j++)
 			{
 				if (_mtx->Col[j] != iColomn)
 					continue;
+				_lMtx->Value[j] = _mtx->Value[j] / divide;
 			}
 		}
-
-		
-		//_lMtx->Value[_mtx->Col[startRowIdx] - 1] = sqrt(_mtx->Value[_mtx->Col[startRowIdx] - 1]);
-		//for (int i = 0; i < _mtx->RowIndex.size()-1; i++)
-		//{
-		//	int K1 = _mtx->RowIndex[i]-1;
-		//	int K2 = _mtx->RowIndex[i + 1] - 1;
-		//	if (K1 == iColomn)
-		//	{
-		//		_lMtx->Value[_mtx->Col[K1] - 1] = sqrt(_mtx->Value[_mtx->Col[K1] - 1]);
-		//		break;
-		//	}
-		//}
-
-
 		return Result::Success;
 	}
 
