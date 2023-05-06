@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "CholeskySolver.h"
-
+#include "Reordering.h"
 
 int main (void)
 {
@@ -30,6 +30,8 @@ int main (void)
     bool zeroIndexing = false;
     auto data = Cholesky::CholeskySolver::Data(colomns, rowIndex, values, zeroIndexing);
     auto report = Cholesky::CholeskySolver::Report();
+
+    Reordering::Reordering::Run();
 
     auto solver = Cholesky::CholeskySolver();
     auto result = solver.Run(data, report);
