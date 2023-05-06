@@ -4,7 +4,7 @@
 
 namespace Cholesky
 {
-	CholeskySolver::Data::Data(const std::vector<int>& iColomn, const std::vector<int>& iRowIndex, std::vector<double>& iValues, bool iZeroIndexing)
+	CholeskySolver::Data::Data(const std::vector<int64_t>& iColomn, const std::vector<int64_t>& iRowIndex, std::vector<double>& iValues, bool iZeroIndexing)
 	{
 		_matrix = std::make_shared<CRSMatrix>();
 		_matrix->Col = iColomn;
@@ -74,8 +74,8 @@ namespace Cholesky
 			return Result::InvalidData;
 
 		//symmetric case
-		int startRowIdx = _mtx->RowIndex[iColomn] ;
-		int endRowIdx = _mtx->RowIndex[iColomn + 1];
+		auto startRowIdx = _mtx->RowIndex[iColomn] ;
+		auto endRowIdx = _mtx->RowIndex[iColomn + 1];
 
 		if (_lMtx->Value[startRowIdx] < 0.0)
 			return Result::InvalidData;
@@ -90,8 +90,8 @@ namespace Cholesky
 		}
 		for (int i = 0; i < iColomn; i++)
 		{
-			int startRowIdx = _mtx->RowIndex[i] ;
-			int endRowIdx = _mtx->RowIndex[i + 1]-1 ;
+			auto startRowIdx = _mtx->RowIndex[i] ;
+			auto endRowIdx = _mtx->RowIndex[i + 1]-1 ;
 			for (int j = startRowIdx; j <= endRowIdx; j++)
 			{
 				if (_mtx->Col[j] != iColomn)
