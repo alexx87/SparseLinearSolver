@@ -25,12 +25,7 @@ namespace Cholesky
 		auto result = Result::Success;
 
 		_mtx = iData._matrix;
-		if (!_mtx->zeroIndexing)
-		{
-			auto res = _ConvertIndicesFromZero();
-			if (res != Result::Success)
-				return res;
-		}
+		_mtx->ConvertIndicesFromZero();
 
 		if (!_mtx)
 			return Result::InvalidData;
@@ -48,20 +43,6 @@ namespace Cholesky
 		_lMtx->PrintFullMatrix();
 
 		return result;
-	}
-
-	Result CholeskySolver::_ConvertIndicesFromZero()
-	{
-		for (auto& col : _mtx->Col)
-		{
-			col--;
-		}
-		for (auto& rowIdx : _mtx->RowIndex)
-		{
-			rowIdx--;
-		}
-		_mtx->zeroIndexing = true;
-		return Result::Success;
 	}
 
 	Result CholeskySolver::_Cmod(int j, int  k)

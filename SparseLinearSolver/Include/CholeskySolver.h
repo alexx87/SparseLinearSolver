@@ -14,8 +14,25 @@ namespace Cholesky
 		std::vector<double> Value;
 		std::vector<int64_t> Col, RowIndex;
 		bool zeroIndexing = true;
+		Result ConvertIndicesFromZero()
+		{
+			if (zeroIndexing)
+				return Result::Success;
+
+			for (auto& col : Col)
+			{
+				col--;
+			}
+			for (auto& rowIdx : RowIndex)
+			{
+				rowIdx--;
+			}
+			zeroIndexing = true;
+			return Result::Success;
+		}
 		void PrintFullMatrix()
 		{
+			std::cout << "\n";
 			for (int64_t i = 0; i < int64_t(RowIndex.size()-1); i++)
 			{
 				int64_t startRowIdx = RowIndex[i];
@@ -88,7 +105,6 @@ namespace Cholesky
 		//CholeskySolver(const CholeskySolver&) = delete;
 
 		Result _Run(const Data& iData, Report& oReport);
-		Result _ConvertIndicesFromZero();
 
 		Result _Cmod(int j, int  k);
 		Result _CDiv(int iColomn);
