@@ -56,7 +56,7 @@ namespace Cholesky
 
 		//symmetric case
 		auto startRowIdx = _mtx->RowIndex[iColomn] ;
-		auto endRowIdx = _mtx->RowIndex[iColomn + 1];
+		//auto endRowIdx = _mtx->RowIndex[iColomn + 1];
 
 		if (_lMtx->Value[startRowIdx] < 0.0)
 			return Result::InvalidData;
@@ -73,7 +73,7 @@ namespace Cholesky
 		{
 			auto startRowIdx = _mtx->RowIndex[i] ;
 			auto endRowIdx = _mtx->RowIndex[i + 1]-1 ;
-			for (int j = startRowIdx; j <= endRowIdx; j++)
+			for (int64_t j = startRowIdx; j <= endRowIdx; j++)
 			{
 				if (_mtx->Col[j] != iColomn)
 					continue;

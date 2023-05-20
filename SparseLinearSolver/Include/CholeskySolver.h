@@ -8,8 +8,13 @@
 
 namespace Cholesky
 {
-	struct CRSMatrix
+	class CRSMatrix
 	{
+	public:
+		const std::vector<int64_t>& GetRowIndex() const {return RowIndex;}
+		const std::vector<int64_t>& GetColomnIndex() const { return Col; }
+		const std::vector<double>& GetValues() const { return Value; }
+
 		int N=0, NZ=0;
 		std::vector<double> Value;
 		std::vector<int64_t> Col, RowIndex;

@@ -4,6 +4,7 @@
 #include "Graph.h"
 #include "CholeskySolver.h"
 #include "Reordering.h"
+#include "ReorderingRCM.h"
 
 
 
@@ -68,8 +69,13 @@ int main (void)
         };
         matrix->zeroIndexing = false;
         matrix->ConvertIndicesFromZero();
-        auto graph = Reordering::Graph();
-        auto res=graph.Create(matrix);
+
+        auto reordering = Reordering::ReorderingRCM();
+        auto data = Reordering::ReorderingRCM::Data(matrix);
+        auto report = Reordering::ReorderingRCM::Report();
+        auto res=reordering.Run(data, report);
+        //auto graph = Reordering::Graph();
+        //auto res=graph.Create(matrix);
         
         if (res != Result::Success)
             std::cout << " Error during reordering\n";

@@ -1,7 +1,14 @@
 #pragma once
 
 #include <vector>
+#include <memory>
+
 #include "Result.h"
+
+namespace Cholesky
+{
+	class CRSMatrix;
+}
 
 namespace Reordering
 {
@@ -11,14 +18,14 @@ namespace Reordering
 		class Data
 		{
 		public:
-			Data(const std::vector<int64_t>& iColomns, const std::vector<int64_t>& iRowIndex, const std::vector<double>& iValues) :
-				_values(iValues), _colomns(iColomns), _rowIndex(iRowIndex)
+			Data(const std::shared_ptr<Cholesky::CRSMatrix>& iMatrix) :
+				_matrix(iMatrix)
 			{};
 			~Data() = default;
+
+			std::shared_ptr<Cholesky::CRSMatrix> GetMatrix() const  {return _matrix;};
 		private:
-			std::vector<double> _values;
-			std::vector<int64_t> _colomns;
-			std::vector<int64_t> _rowIndex;
+			std::shared_ptr<Cholesky::CRSMatrix> _matrix;
 			friend class ReorderingRCM;
 		};
 		class Report
@@ -40,6 +47,8 @@ namespace Reordering
 		
 		Result _Run(const Data& iData, Report& oReport) const;
 
+	private:
+		std::shared_ptr<Cholesky::CRSMatrix> _matrix;
 	};
 
 }

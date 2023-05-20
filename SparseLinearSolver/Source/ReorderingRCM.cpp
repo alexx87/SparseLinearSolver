@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+#include "Graph.h"
+
 namespace Reordering
 {
     Result ReorderingRCM::Run(const Data& iData, Report& oReport) const
@@ -17,11 +19,20 @@ namespace Reordering
 
     Result ReorderingRCM::_Run(const Data& iData, Report& oReport) const
     {
-        auto& values = iData._values;
-        auto& rowIndex = iData._rowIndex;
-        auto& colomns = iData._colomns;
+        auto matrix = iData.GetMatrix();
 
-        //auto res = _GetGraph(rowIndex, colomns);
+        auto matrixGraph = Graph::Graph();
+        auto res = matrixGraph.Create(matrix);
+        if (res != Result::Success)
+            return res;
+        
+        int root = 0;
+        std::vector<int> mask;
+        mask.resize(matrixGraph.GetNodes().size()-1, 1);
+        std::vector<int> oIndexLevels;
+        std::vector<int> oLevels;
+        matrixGraph.FindRootNode(root, mask, oIndexLevels, oLevels);
+
 
 
         return Result::Success;
