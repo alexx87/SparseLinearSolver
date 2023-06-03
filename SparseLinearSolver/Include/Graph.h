@@ -18,8 +18,8 @@ namespace Reordering
 		~Graph() = default;
 
 		Result Create(const std::shared_ptr<Cholesky::CRSMatrix>& iMatrix) ;
-		std::vector<int>& GetNodes() { return _nodes; };
-		std::vector<int>& GetAdjacency() { return _adjacency; };
+		const std::vector<int>& GetNodes() const  { return _nodes; };
+		const std::vector<int>& GetAdjacency() const { return _adjacency; };
 
 		Result FindRootNode(int& ioRoot, const std::vector<int>& iMask, std::vector<int>& oIndexLevels, std::vector<int>& oLevels) const;
 
