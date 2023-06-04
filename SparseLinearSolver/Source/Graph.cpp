@@ -26,13 +26,15 @@ namespace Reordering
 
         return Result::Success;
     }
-    Result Graph::FindRootNode(int& ioRoot, const std::vector<int>& iMask, std::vector<int>& oIndexLevels, std::vector<int>& oLevels) const
+    Result Graph::FindRootNode(int& ioRoot, const std::vector<int>& iMask) const
     {
-        auto res=_GenerateRootedLevelStructure(ioRoot, iMask, oIndexLevels, oLevels);
+        std::vector<int> indexLevels;
+        std::vector<int> levels;
+        auto res=_GenerateRootedLevelStructure(ioRoot, iMask, indexLevels, levels);
         if (res != Result::Success)
             return res;
-        auto numberOfLevels = oIndexLevels.size() - 1;
-        auto maskedGraphSize = oIndexLevels.back();
+        auto numberOfLevels = indexLevels.size() - 1;
+        auto maskedGraphSize = indexLevels.back();
         if (numberOfLevels ==1|| maskedGraphSize == numberOfLevels)
             return Result::Success;
         auto numberOfNewLevels = numberOfLevels + 1;
@@ -41,13 +43,13 @@ namespace Reordering
         while (iterationCount<maskedGraphSize )
         {
             iterationCount++;
-            auto lastLevelBegin = oIndexLevels[numberOfLevels - 1];
-            auto lastLevelEnd = oIndexLevels[numberOfLevels];
+            auto lastLevelBegin = indexLevels[numberOfLevels - 1];
+            auto lastLevelEnd = indexLevels[numberOfLevels];
             int minDegree = maskedGraphSize;
-            ioRoot = oLevels[lastLevelBegin];
+            auto rootCandidate = levels[lastLevelBegin];
             for (auto lastLevelNodeIdx = lastLevelBegin; lastLevelNodeIdx < lastLevelEnd; ++lastLevelNodeIdx)
             {
-                auto lastLevelNode = oLevels[lastLevelNodeIdx];
+                auto lastLevelNode = levels[lastLevelNodeIdx];
                 int nodeDegree = 0;
                 for (int adjacentNodeIdx = _nodes[lastLevelNode]; adjacentNodeIdx < _nodes[lastLevelNode + 1]; ++adjacentNodeIdx)
                 {
@@ -59,21 +61,21 @@ namespace Reordering
                 }
                 if (nodeDegree < minDegree)
                 {
-                    ioRoot = lastLevelNode;
+                    rootCandidate = lastLevelNode;
                     minDegree = nodeDegree;
                 }
             }
 
-            res = _GenerateRootedLevelStructure(ioRoot, iMask, oIndexLevels, oLevels);
+            res = _GenerateRootedLevelStructure(rootCandidate, iMask, indexLevels, levels);
             if (res != Result::Success)
                 return res;
-            numberOfNewLevels = oIndexLevels.size() - 1;
+            numberOfNewLevels = indexLevels.size() - 1;
             if (numberOfNewLevels <= numberOfLevels)
                 break;
             if (numberOfLevels == maskedGraphSize)
                 break;
             numberOfLevels = numberOfNewLevels;
-            
+            ioRoot = rootCandidate;
         }
 
         return Result::Success;

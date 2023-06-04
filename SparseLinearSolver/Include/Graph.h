@@ -21,7 +21,7 @@ namespace Reordering
 		const std::vector<int>& GetNodes() const  { return _nodes; };
 		const std::vector<int>& GetAdjacency() const { return _adjacency; };
 
-		Result FindRootNode(int& ioRoot, const std::vector<int>& iMask, std::vector<int>& oIndexLevels, std::vector<int>& oLevels) const;
+		Result FindRootNode(int& ioRoot, const std::vector<int>& iMask) const;
 
 	private:
 		//Generation of level structure with root node on zero level fron masked subgraph

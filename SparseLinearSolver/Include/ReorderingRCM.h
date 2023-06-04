@@ -48,10 +48,12 @@ namespace Reordering
 	private:
 		
 		Result _Run(const Data& iData, Report& oReport) const;
+		//Find Reversed Cuthull-McKee permutation for full graph
+		Result _CalculateRCMForGraph(const Graph& iGraph, std::vector<int>& oPermutation) const;
 		//Find Reversed Cuthull-McKee permutation for subgraph
 		Result _CalculateRCMForSubgraph(int iRoot, const Graph& iGraph, std::vector<int>& ioMask, std::vector<int>& oPermutation) const;
 		//Calculate node degrees for subgraph
-		Result _CalculateNodeDegreesForSubgraph(int iRoot, const Graph& iGraph, const std::vector<int>& iMask, std::vector<int>& oNodeDegrees, std::vector<int>& oLevels) const;
+		Result _CalculateNodeDegreesForSubgraph(int iRoot, const Graph& iGraph, const std::vector<int>& iMask, std::vector<int>& oNodeDegrees) const;
 
 	private:
 		std::shared_ptr<Cholesky::CRSMatrix> _matrix;
