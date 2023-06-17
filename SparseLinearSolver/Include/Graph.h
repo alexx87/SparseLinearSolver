@@ -20,6 +20,7 @@ namespace Reordering
 		Result Create(const std::shared_ptr<Cholesky::CRSMatrix>& iMatrix) ;
 		const std::vector<int>& GetNodes() const  { return _nodes; };
 		const std::vector<int>& GetAdjacency() const { return _adjacency; };
+		std::vector<int>& GetAdjacency() { return _adjacency; };
 
 		Result FindRootNode(int& ioRoot, const std::vector<int>& iMask) const;
 

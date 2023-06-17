@@ -49,8 +49,10 @@ namespace Reordering
 	private:
 		Result _Run(const Data& iData, Report& oReport) const;
 
-		Result _FindReachableSet(int iRoot, const Graph& iGraph, const std::vector<int>& iNodeDegree, const std::vector<int>& ioMarker, std::vector<int>& oReachableSet, std::vector<int>& oNeighbourhood) const;
+		Result _FindReachableSet(int iRoot, const Graph& iGraph, const std::vector<int>& iNodeDegree, std::vector<int>& ioMarker, std::vector<int>& oReachableSet, std::vector<int>& oNeighbourhood) const;
 		
+		Result _FactorGraphTransformation(int iRoot, Graph& ioGraph, const std::vector<int>& iMarker, const std::vector<int>& iReachableSet, const std::vector<int>& iNeighbourhood) const;
+
 	private:
 		std::shared_ptr<Cholesky::CRSMatrix> _matrix;
 	};

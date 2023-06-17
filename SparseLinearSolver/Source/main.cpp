@@ -5,6 +5,7 @@
 #include "CholeskySolver.h"
 #include "Reordering.h"
 #include "ReorderingRCM.h"
+#include "ReorderingMinimalDegree.h"
 
 
 
@@ -90,37 +91,63 @@ int main (void)
         //                       8
         //};
 
-        matrix->RowIndex = { 1, 4, 9, 12, 15, 17, 20, 22,23,24,25};
+        //RCM
+        //matrix->RowIndex = { 1, 4, 9, 12, 15, 17, 20, 22,23,24,25};
+        //matrix->Col =
+        //{ 1,       4,    6, 
+        //     2, 3,    5,    7,       10,
+        //        3, 4, 5,   
+        //           4,    6,       9, 
+        //              5,    7, 
+        //                 6, 7, 8,  
+        //                    7, 8,  
+        //                       8, 
+        //                          9, 
+        //                             10
+        //};
+        //matrix->Value =
+        //{ 1,       4,    6,
+        //     2, 3,    5,    7,       0,
+        //        3, 4, 5,
+        //           4,    6,       9,
+        //              5,    7,
+        //                 6, 7, 8,
+        //                    7, 8,
+        //                       8,
+        //                          9,
+        //                             0
+        //};
+
+        //minimaldegree
+        matrix->RowIndex = { 1, 4, 7, 9, 11, 13, 15, 16,18,19};
         matrix->Col =
-        { 1,       4,    6, 
-             2, 3,    5,    7,       10,
-                3, 4, 5,   
-                   4,    6,       9, 
-                      5,    7, 
-                         6, 7, 8,  
-                            7, 8,  
-                               8, 
-                                  9, 
-                                     10
+        { 1,          5,       8,
+             2,    4, 5, 
+                3,             8,
+                   4,       7,    
+                      5, 6,
+                         6,    8,
+                            7,
+                               8, 9,
+                                  9
         };
         matrix->Value =
-        { 1,       4,    6,
-             2, 3,    5,    7,       0,
-                3, 4, 5,
-                   4,    6,       9,
-                      5,    7,
-                         6, 7, 8,
-                            7, 8,
-                               8,
-                                  9,
-                                     0
+        { 1,          5,       8,
+             2,    4, 5,
+                3,             8,
+                   4,       7,
+                      5, 6,
+                         6,    8,
+                            7,
+                               8, 9,
+                                  9
         };
         matrix->zeroIndexing = false;
         matrix->ConvertIndicesFromZero();
 
-        auto reordering = Reordering::ReorderingRCM();
-        auto data = Reordering::ReorderingRCM::Data(matrix);
-        auto report = Reordering::ReorderingRCM::Report();
+        auto reordering = Reordering::ReorderingMinimalDegree();
+        auto data = Reordering::ReorderingMinimalDegree::Data(matrix);
+        auto report = Reordering::ReorderingMinimalDegree::Report();
         auto res=reordering.Run(data, report);
         //auto graph = Reordering::Graph();
         //auto res=graph.Create(matrix);
