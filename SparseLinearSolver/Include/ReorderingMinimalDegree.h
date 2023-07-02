@@ -53,6 +53,10 @@ namespace Reordering
 		
 		Result _FactorGraphTransformation(int iRoot, Graph& ioGraph, const std::vector<int>& iMarker, const std::vector<int>& iReachableSet, const std::vector<int>& iNeighbourhood) const;
 
+		Result _UpdateNodeDegrees(const Graph& iMatrixGraph, const std::vector<int>& iNodesToUpdate, std::vector<int>& ioNodeDegree, std::vector<int>& ioQSize, std::vector<int>& ioQLink, std::vector<int>& ioMarker) const;
+	
+		Result _MergeToSuperNodes(const Graph& iGraph, std::vector<int>& ioNodeDegree, std::vector<int>& ioQSize,
+			std::vector<int>& ioQLink, std::vector<int>& ioMarker, int deg0, const std::vector<int>& iNeighbourhood, std::vector<int>& oReachSet, std::vector<int>& oOverlap) const;
 	private:
 		std::shared_ptr<Cholesky::CRSMatrix> _matrix;
 	};

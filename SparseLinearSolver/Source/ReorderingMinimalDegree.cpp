@@ -43,30 +43,13 @@ namespace Reordering
         if (res != Result::Success)
             return res;
 
-        root = 1;
-        res = _FindReachableSet(root, matrixGraph, nodeDegree, marker, reachableSet, neighbourhood);
-        if (res != Result::Success)
-            return res;
+        std::vector<int> nodesToUpdate;
+        nodesToUpdate.push_back(root);
 
-        res = _FactorGraphTransformation(root, matrixGraph, marker, reachableSet, neighbourhood);
-        if (res != Result::Success)
-            return res;
-
-        root = 2;
-        res = _FindReachableSet(root, matrixGraph, nodeDegree, marker, reachableSet, neighbourhood);
-        if (res != Result::Success)
-            return res;
-
-        res = _FactorGraphTransformation(root, matrixGraph, marker, reachableSet, neighbourhood);
-        if (res != Result::Success)
-            return res;
-
-        root = 3;
-        res = _FindReachableSet(root, matrixGraph, nodeDegree, marker, reachableSet, neighbourhood);
-        if (res != Result::Success)
-            return res;
-
-        res = _FactorGraphTransformation(root, matrixGraph, marker, reachableSet, neighbourhood);
+        std::vector<int> QLink, QSize;
+        QLink.resize(matrixGraph.GetNodes().size(), 0);
+        QSize.resize(matrixGraph.GetNodes().size(), 0);
+        res = _UpdateNodeDegrees(matrixGraph, nodesToUpdate, nodeDegree, QSize,QLink, marker);
         if (res != Result::Success)
             return res;
 
@@ -170,6 +153,87 @@ namespace Reordering
                 ioGraph.GetAdjacency()[j] = iRoot;
                 break;
             }
+        }
+
+        return Result::Success;
+    }
+    Result ReorderingMinimalDegree::_UpdateNodeDegrees(const Graph& iGraph, const std::vector<int>& iNodesToUpdate, std::vector<int>& ioNodeDegree, std::vector<int>& ioQSize, std::vector<int>& ioQLink, std::vector<int>& ioMarker) const
+    {
+        if (iNodesToUpdate.empty())
+            return Result::Success;
+
+        int deg0 = 0;
+        //Find neighbourhood superNodes; 
+        std::vector<int> neighbourhood;
+        for (const auto& nodeToUpdate : iNodesToUpdate)
+        {
+            deg0 += ioQSize[nodeToUpdate];
+            auto startAdjNodes = iGraph.GetNodes()[nodeToUpdate];
+            auto endAdjNodes = iGraph.GetNodes()[nodeToUpdate + 1];
+            for (int j = startAdjNodes; j < endAdjNodes; ++j)
+            {
+                auto adjnode = iGraph.GetAdjacency()[j];
+                if (ioMarker[adjnode] != 0 || ioNodeDegree[adjnode] >= 0)
+                    continue;
+                ioMarker[adjnode] = -1;
+                neighbourhood.push_back(adjnode);
+            }
+        }
+        if (neighbourhood.size() > 0)
+        {
+            std::vector<int>reachSet;
+            std::vector<int>overLap;
+            auto res= _MergeToSuperNodes(iGraph, ioNodeDegree, ioQSize, ioQLink, ioMarker, deg0, neighbourhood, reachSet, overLap);
+            if (res != Result::Success)
+                return res;
+        }
+
+
+        for (const auto& nodeToUpdate : iNodesToUpdate)
+        {
+            if (ioMarker[nodeToUpdate] > 1 || ioMarker[nodeToUpdate] < 0)
+                continue;
+            ioMarker[nodeToUpdate] = 2;
+
+            std::vector<int> reachableSet;
+            std::vector<int> neighbourhood;
+            auto res = _FindReachableSet(nodeToUpdate, iGraph, ioNodeDegree, ioMarker, reachableSet, neighbourhood);
+            if (res != Result::Success)
+                return res;
+            auto deg1 = deg0;
+            if (reachableSet.size() > 0)
+            {
+                for (const auto& reachNode : reachableSet)
+                {
+                    deg1 += ioQSize[reachNode];
+                    ioMarker[nodeToUpdate] = 0;
+                }
+            }
+            ioNodeDegree[nodeToUpdate] = deg1-1;
+            if (neighbourhood.size() > 0)
+            {
+                for (const auto& neigbour : neighbourhood)
+                {
+                    ioMarker[neigbour] = 0;
+                }
+            }
+        }
+        return Result::Success;
+    }
+
+    Result ReorderingMinimalDegree::_MergeToSuperNodes(const Graph& iGraph, std::vector<int>& ioNodeDegree, std::vector<int>& ioQSize,
+        std::vector<int>& ioQLink, std::vector<int>& ioMarker, int deg0, const std::vector<int>& iNeighbourhood, std::vector<int>& oReachSet, std::vector<int>& oOverlap) const
+    {
+        if (iNeighbourhood.empty())
+            return Result::Success;
+        for (const auto& node : iNeighbourhood)
+        {
+            ioMarker[node] = 0;
+        }
+
+        for (const auto& node : iNeighbourhood)
+        {
+            ioMarker[node] = -1;
         }
 
         return Result::Success;
