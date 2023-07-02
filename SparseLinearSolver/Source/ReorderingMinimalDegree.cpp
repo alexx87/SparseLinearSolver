@@ -43,11 +43,39 @@ namespace Reordering
         if (res != Result::Success)
             return res;
 
+        root = 1;
+        res = _FindReachableSet(root, matrixGraph, nodeDegree, marker, reachableSet, neighbourhood);
+        if (res != Result::Success)
+            return res;
+
+        res = _FactorGraphTransformation(root, matrixGraph, marker, reachableSet, neighbourhood);
+        if (res != Result::Success)
+            return res;
+
+        root = 2;
+        res = _FindReachableSet(root, matrixGraph, nodeDegree, marker, reachableSet, neighbourhood);
+        if (res != Result::Success)
+            return res;
+
+        res = _FactorGraphTransformation(root, matrixGraph, marker, reachableSet, neighbourhood);
+        if (res != Result::Success)
+            return res;
+
+        root = 3;
+        res = _FindReachableSet(root, matrixGraph, nodeDegree, marker, reachableSet, neighbourhood);
+        if (res != Result::Success)
+            return res;
+
+        res = _FactorGraphTransformation(root, matrixGraph, marker, reachableSet, neighbourhood);
+        if (res != Result::Success)
+            return res;
+
         return res;
     }
 
     Result ReorderingMinimalDegree::_FindReachableSet(int iRoot, const Graph& iGraph, const std::vector<int>& iNodeDegree, std::vector<int>& ioMarker, std::vector<int>& oReachableSet, std::vector<int>& oNeighbourhood ) const
     {
+        oReachableSet.clear();
         auto startAdjNodes = iGraph.GetNodes()[iRoot];
         auto endAdjNodes = iGraph.GetNodes()[iRoot + 1];
 
@@ -103,11 +131,11 @@ namespace Reordering
         {
             auto startAdjNodes = ioGraph.GetNodes()[node];
             auto endAdjNodes = ioGraph.GetNodes()[node + 1] - 1;
-            for (int i = startAdjNodes; i < endAdjNodes; ++i)
+            for (int i = startAdjNodes; i <= endAdjNodes; ++i)
             {
                 ioGraph.GetAdjacency()[i] = iReachableSet[reachsetCount];
                 reachsetCount++;
-                if (reachsetCount == iReachableSet.size())
+                if (reachsetCount > iReachableSet.size())
                 {
                     ioGraph.GetAdjacency()[i + 1] = std::numeric_limits<int>::max();
                     break;
